@@ -1,8 +1,8 @@
 import subprocess
 import SimpleITK as sitk
 import os
-from .measure_volume import calculate_volume
-from .overlays import *
+from measure_volume import calculate_volume
+from overlays import *
 
 def main():
     curr_dir = os.getcwd()

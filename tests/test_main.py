@@ -1,5 +1,4 @@
 import unittest
-from src.main import main
 import os
 
 class TestModule1(unittest.TestCase):
