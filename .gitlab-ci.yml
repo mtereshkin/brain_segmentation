@@ -13,6 +13,8 @@ stages:
 variables:
     IMAGE_VERSION: $CI_PIPELINE_ID
     DOCKER_USERNAME: mitereshkin
+    DOCKER_HOST: tcp://docker:2375
+
 docker_build:
     tags:
         - macos
