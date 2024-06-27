@@ -1,0 +1,26 @@
+workflow:
+    name: Test Assignment Pipeline
+    rules:
+        - if: $CI_COMMIT_BRANCH == 'main' || $CI_COMMIT_BRANCH == 'dev'
+          when: always
+        - if: $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME == 'dev' && $CI_PIPELINE_SOURCE == 'merge_request_event'
+
+stages:
+    - contanierization
+    - test
+    - deploy
+
+unit_testing:
+    stage: test
+    image: python:3.9.19-slim
+    script: 
+        - python -m unittest tests/test_main.py tests/test_measure_volume.py
+    artifacts:
+        when: on_success
+        expire_in: 30 days
+        name: Assignment Test Result
+        reports:
+            junit: test-results.xml
+
+
+
