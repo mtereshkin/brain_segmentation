@@ -11,6 +11,7 @@ stages:
     - deploy
 
 unit_testing:
+    tags: macos
     stage: test
     image: python:3.9.19-slim
     script: 
