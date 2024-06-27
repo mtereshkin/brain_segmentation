@@ -13,16 +13,15 @@ stages:
 variables:
     IMAGE_VERSION: $CI_PIPELINE_ID
     DOCKER_USERNAME: mitereshkin
-    DOCKER_HOST: tcp://docker:2375
 
 docker_build:
     tags:
         - macos
     stage: containerization
-    image: docker:latest
+    image: docker:24.0.5
     dependencies: []
     services:
-        - docker:dind
+        - docker:24.0.5-dind
     script:
         - docker build -t $DOCKER_USERNAME/test:$IMAGE_VERSION .
         - docker images $DOCKER_USERNAME/test:$IMAGE_VERSION
@@ -39,9 +38,9 @@ docker_test:
     tags:
         - macos
     stage: containerization
-    image: docker:latest
+    image: docker:24.0.5
     services: 
-        - docker:dind
+        - docker:24.0.5-dind
     needs:
         - docker_build
     script:
