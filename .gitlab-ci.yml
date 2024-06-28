@@ -48,9 +48,9 @@ docker_test:
         - docker run --name=new-app -d -p 4000:8080 -v ${CI_PROJECT_DIR}:/test-assignment $DOCKER_USERNAME/test:$IMAGE_VERSION
     artifacts:
         paths:
-            - "png_overlays"
-            - "outputBrainExtractionMask.nii.gz"
-            - "CT2.nii.gz"
+            - "/test-assignment/png_overlays"
+            - "/test-assignment/outputBrainExtractionMask.nii.gz"
+            - "/test-assignment/CT2.nii.gz"
         when:
             on_success
         expire_in: 30 days
