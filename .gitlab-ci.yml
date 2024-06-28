@@ -45,7 +45,7 @@ docker_test:
         - docker_build
     script:
         - docker load -i image/test-image-$IMAGE_VERSION.tar
-        - docker run --name=test-app -d -p 4000:8080 $DOCKER_USERNAME/test:$IMAGE_VERSION
+        - docker run --name=test-app -d -p 4000:8080 -v ${CI_PROJECT_DIR}:/test-assignment $DOCKER_USERNAME/test:$IMAGE_VERSION
     artifacts:
         paths:
             - "png_overlays"
@@ -63,12 +63,10 @@ unit_testing:
     needs:
         - docker_test
     script: 
-        - python -m unittest tests/test_main.py tests/test_measure_volume.py
+        - python3 -m unittest tests/test_main.py tests/test_measure_volume.py
     artifacts:
         when: on_success
         expire_in: 30 days
         name: Assignment Test Result
-        reports:
-            junit: test-results.xml
 
 
