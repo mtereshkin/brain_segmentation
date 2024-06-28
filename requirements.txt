@@ -2,3 +2,5 @@ SimpleITK
 nibabel
 numpy
 matplotlib
+minio
+Flask
