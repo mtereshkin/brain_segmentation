@@ -1,0 +1,72 @@
+workflow:
+    name: Test Assignment Pipeline
+    rules:
+        - if: $CI_COMMIT_BRANCH == 'main' || $CI_COMMIT_BRANCH == 'dev'
+          when: always
+        - if: $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME == 'dev' && $CI_PIPELINE_SOURCE == 'merge_request_event'
+
+stages:
+    - containerization
+    - test
+    - deploy
+
+variables:
+    IMAGE_VERSION: $CI_PIPELINE_ID
+    DOCKER_USERNAME: mitereshkin
+
+docker_build:
+    tags:
+        - macos
+    stage: containerization
+    image: docker:24.0.5
+    dependencies: []
+    services:
+        - docker:24.0.5-dind
+    script:
+        - docker build -t $DOCKER_USERNAME/test:$IMAGE_VERSION .
+        - docker images $DOCKER_USERNAME/test:$IMAGE_VERSION
+        - mkdir image
+        - docker save $DOCKER_USERNAME/test:$IMAGE_VERSION > image/test-image-$IMAGE_VERSION.tar
+    artifacts:
+        paths:
+            - image
+        when:
+            on_success
+        expire_in: 30 days
+
+docker_test:
+    tags:
+        - macos
+    stage: containerization
+    image: docker:24.0.5
+    services: 
+        - docker:24.0.5-dind
+    needs:
+        - docker_build
+    script:
+        - docker load -i image/test-image-$IMAGE_VERSION.tar
+        - docker run --name=test-app -d -p 4000:8080 -v ${CI_PROJECT_DIR}:/test-assignment $DOCKER_USERNAME/test:$IMAGE_VERSION
+    artifacts:
+        paths:
+            - "png_overlays"
+            - "outputBrainExtractionMask.nii.gz"
+            - "CT2.nii.gz"
+        when:
+            on_success
+        expire_in: 30 days
+
+unit_testing:
+    tags: 
+        - macos
+    stage: test
+    image: python:3.9.19-slim
+    needs:
+        - docker_test
+    script: 
+        - python3 -m unittest tests/test_main.py tests/test_measure_volume.py
+    artifacts:
+        when: on_success
+        expire_in: 30 days
+        name: Assignment Test Result
+
+
