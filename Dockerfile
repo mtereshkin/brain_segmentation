@@ -1,7 +1,7 @@
 FROM ubuntu:latest
 
-RUN apt update
-RUN apt install python3 python3-pip -y
+RUN apt-get update
+RUN apt-get install -y --no-install-recommends python3 python3-pip -y
 
 WORKDIR /test-assignment
 
