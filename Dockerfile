@@ -1,11 +1,14 @@
-FROM python:3.9.19-slim
+FROM ubuntu:latest
+
+RUN apt update
+RUN apt install python3 python3-pip -y
 
 WORKDIR /test-assignment
 
 COPY . .
 
-RUN pip install -r requirements.txt
+RUN pip3 install -r requirements.txt
 
 EXPOSE 8080
 
-CMD ["python", "src/main.py"]
+CMD ["python3", "src/main.py"]
