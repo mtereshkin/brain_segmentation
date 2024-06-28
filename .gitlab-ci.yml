@@ -45,15 +45,12 @@ docker_test:
         - docker_build
     script:
         - docker load -i image/test-image-$IMAGE_VERSION.tar
-        - docker run --name=app1 -d -p 4000:8080 -v ${PWD}:/test-assignment $DOCKER_USERNAME/test:$IMAGE_VERSION
-    artifacts:
-        paths:
-            - "${PWD}/png_overlays"
-            - "${PWD}/outputBrainExtractionMask.nii.gz"
-            - "${PWD}/CT2.nii.gz"
-        when:
-            on_success
-        expire_in: 30 days
+        - docker run --name=app2 -d -p 4000:8080 -v ${PWD}:/test-assignment $DOCKER_USERNAME/test:$IMAGE_VERSION
+        - docker wait app2
+        - docker cp app2:/test-assignment/png_overlays ${PWD}/png_overlays
+        - docker cp app2:/test-assignment/outputBrainExtractionMask.nii.gz ${PWD}/outputBrainExtractionMask.nii.gz
+        - docker cp app2:/test-assignment/CT2.nii.gz ${PWD}/CT2.nii.gz
+
 
 unit_testing:
     tags: 
