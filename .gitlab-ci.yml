@@ -64,8 +64,9 @@ unit_testing:
     needs:
         - docker_test
     before_script:
+        - python -m venv test-assignment
+        - source test-assignment/bin/activate
         - pip install nibabel numpy
-        - alias python=python3.9
     script: 
         - python -m unittest discover tests
     artifacts:
