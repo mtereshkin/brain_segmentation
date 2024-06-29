@@ -10,18 +10,14 @@ import zipfile
 import shutil
 
 app = Flask(__name__)
+app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY")
 
-endpoint = 'minio.example.com:9000'
-access_key = 'YOUR_ACCESS_KEY'
-secret_key = 'YOUR_SECRET_KEY'
-bucket_name = 'your-bucket'
+ACCESS_KEY = os.environ.get("MINIO_ROOT_USER")
+SECRET_KEY = os.environ.get("MINIO_ROOT_PASSWORD")
+BUCKET_NAME = os.environ.get("MINIO_BUCKET")
+MINIO_API_HOST = os.environ.get("MINIO_ENDPOINT")
 
-minio_client = Minio(
-    endpoint='your-minio-server-address',
-    access_key='your-access-key',
-    secret_key='your-secret-key',
-    secure=False  # Change to True if using HTTPS
-)
+client = Minio(MINIO_API_HOST, ACCESS_KEY, SECRET_KEY, secure=False)
 
 @app.route('/upload-data', methods=['POST'])
 def upload_data():
