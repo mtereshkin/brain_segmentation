@@ -65,6 +65,7 @@ unit_testing:
         - docker_test
     before_script:
         - pip install nibabel numpy
+        - alias python=python3.9
     script: 
         - python -m unittest discover tests
     artifacts:
