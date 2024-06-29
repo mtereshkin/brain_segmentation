@@ -22,17 +22,12 @@ docker_build:
     dependencies: []
     services:
         - docker:24.0.5-dind
+    before_script:
+        - docker login --username=$DOCKER_USERNAME --password=$DOCKER_PASSWORD
     script:
         - docker build -t $DOCKER_USERNAME/test:$IMAGE_VERSION .
         - docker images $DOCKER_USERNAME/test:$IMAGE_VERSION
-        - mkdir image
-        - docker save $DOCKER_USERNAME/test:$IMAGE_VERSION > image/test-image-$IMAGE_VERSION.tar
-    artifacts:
-        paths:
-            - image
-        when:
-            on_success
-        expire_in: 30 days
+        - docker push $DOCKER_USERNAME/test:$IMAGE_VERSION
 
 docker_test:
     tags:
@@ -43,8 +38,10 @@ docker_test:
         - docker:24.0.5-dind
     needs:
         - docker_build
+    before_script:
+        - docker login --username=$DOCKER_USERNAME --password=$DOCKER_PASSWORD
     script:
-        - docker load -i image/test-image-$IMAGE_VERSION.tar
+        - docker pull $DOCKER_USERNAME/test:$IMAGE_VERSION
         - docker run --name=app10 -d -p 4000:8080 $DOCKER_USERNAME/test:$IMAGE_VERSION
         - docker wait app10
         - docker cp app10:/test-assignment/png_overlays ${PWD}/png_overlays
