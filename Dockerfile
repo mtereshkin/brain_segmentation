@@ -18,6 +18,10 @@ COPY . .
 
 RUN chmod +x install.sh
 
+ENV PATH=/test_assignment/install/bin:$PATH 
+    
+ENV ANTSPATH=/test_assignment/install/bin
+
 EXPOSE 8080
 
 CMD ./install.sh && python src/main.py
