@@ -11,7 +11,7 @@ stages:
     - deploy
 
 variables:
-    IMAGE_VERSION: 13
+    IMAGE_VERSION: 15
     DOCKER_USERNAME: mitereshkin
 
 docker_build:
