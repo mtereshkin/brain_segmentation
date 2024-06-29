@@ -42,11 +42,12 @@ docker_test:
         - docker login --username=$DOCKER_USERNAME --password=$DOCKER_PASSWORD
     script:
         - docker pull $DOCKER_USERNAME/test:$IMAGE_VERSION
-        - docker run --name=app11 -d -p 4000:8080 $DOCKER_USERNAME/test:$IMAGE_VERSION
-        - docker wait app11
-        - docker cp app11:/test-assignment/png_overlays ${PWD}/png_overlays
-        - docker cp app11:/test-assignment/outputBrainExtractionMask.nii.gz ${PWD}/outputBrainExtractionMask.nii.gz
-        - docker cp app11:/test-assignment/CT2.nii.gz ${PWD}/CT2.nii.gz
+        - docker run --name=app1 -d -p 4000:8080 $DOCKER_USERNAME/test:$IMAGE_VERSION
+        - docker wait app1
+        - docker cp app1:/test-assignment/png_overlays ${PWD}/png_overlays
+        - docker cp app1:/test-assignment/outputBrainExtractionMask.nii.gz ${PWD}/outputBrainExtractionMask.nii.gz
+        - docker cp app1:/test-assignment/CT2.nii.gz ${PWD}/CT2.nii.gz
+        - docker rm app1
     artifacts:
         paths:
             - png_overlays
