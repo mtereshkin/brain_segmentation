@@ -11,7 +11,7 @@ stages:
     - deploy
 
 variables:
-    IMAGE_VERSION: 1
+    IMAGE_VERSION: 13
     DOCKER_USERNAME: mitereshkin
 
 docker_build:
@@ -45,12 +45,19 @@ docker_test:
         - docker_build
     script:
         - docker load -i image/test-image-$IMAGE_VERSION.tar
-        - docker run --name=app2 -d -p 4000:8080 -v ${PWD}:/test-assignment $DOCKER_USERNAME/test:$IMAGE_VERSION
-        - docker wait app2
-        - docker cp app2:/test-assignment/png_overlays ${PWD}/png_overlays
-        - docker cp app2:/test-assignment/outputBrainExtractionMask.nii.gz ${PWD}/outputBrainExtractionMask.nii.gz
-        - docker cp app2:/test-assignment/CT2.nii.gz ${PWD}/CT2.nii.gz
-
+        - docker run --name=app10 -d -p 4000:8080 $DOCKER_USERNAME/test:$IMAGE_VERSION
+        - docker wait app10
+        - docker cp app10:/test-assignment/png_overlays ${PWD}/png_overlays
+        - docker cp app10:/test-assignment/outputBrainExtractionMask.nii.gz ${PWD}/outputBrainExtractionMask.nii.gz
+        - docker cp app10:/test-assignment/CT2.nii.gz ${PWD}/CT2.nii.gz
+    artifacts:
+	paths:
+	    - png_overlays
+	    - outputBrainExtractionMask.nii.gz
+	    - CT2.nii.gz
+	when:
+	    on_success
+	expire_in: 30 days
 
 unit_testing:
     tags: 
