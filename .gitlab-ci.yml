@@ -63,8 +63,10 @@ unit_testing:
     image: python:3.9.19-slim
     needs:
         - docker_test
+    before_script:
+        - pip install nibabel numpy
     script: 
-        - python3 -m unittest tests/test_main.py tests/test_measure_volume.py
+        - python -m unittest discover tests
     artifacts:
         when: on_success
         expire_in: 30 days
