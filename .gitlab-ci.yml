@@ -51,13 +51,13 @@ docker_test:
         - docker cp app10:/test-assignment/outputBrainExtractionMask.nii.gz ${PWD}/outputBrainExtractionMask.nii.gz
         - docker cp app10:/test-assignment/CT2.nii.gz ${PWD}/CT2.nii.gz
     artifacts:
-	paths:
-	    - png_overlays
-	    - outputBrainExtractionMask.nii.gz
-	    - CT2.nii.gz
-	when:
-	    on_success
-	expire_in: 30 days
+        paths:
+            - png_overlays
+            - outputBrainExtractionMask.nii.gz
+            - CT2.nii.gz
+        when:
+            on_success
+        expire_in: 30 days
 
 unit_testing:
     tags: 
