@@ -16,7 +16,7 @@ variables:
 
 docker_build:
     tags:
-        - macos
+        - macos-docker
     stage: containerization
     image: docker:24.0.5
     dependencies: []
@@ -31,7 +31,7 @@ docker_build:
 
 docker_test:
     tags:
-        - macos
+        - macos-docker
     stage: containerization
     image: docker:24.0.5
     services: 
@@ -59,14 +59,12 @@ docker_test:
 
 unit_testing:
     tags: 
-        - macos
+        - macos-docker
     stage: test
     image: python:3.9.19-slim
     needs:
         - docker_test
     before_script:
-        - python -m venv test-assignment
-        - source test-assignment/bin/activate
         - pip install nibabel numpy
     script: 
         - python -m unittest discover tests
