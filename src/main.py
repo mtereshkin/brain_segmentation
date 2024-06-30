@@ -13,7 +13,7 @@ def main():
     image = reader.Execute()
     sitk.WriteImage(image, os.path.join(curr_dir, "CT2.nii.gz"))
 
-    command = "/test-assignment/ANTs/Scripts/antsBrainExtraction.sh -d 3 -a CT2.nii.gz -e templates/T_template0.nii.gz  -m templates/T_template0_BrainCerebellumProbabilityMask.nii.gz -o output"
+    command = "/test-assignment/install/bin/antsBrainExtraction.sh -d 3 -a CT2.nii.gz -e templates/T_template0.nii.gz  -m templates/T_template0_BrainCerebellumProbabilityMask.nii.gz -o output"
     subprocess.run(command, shell=True)
 
     mask_path = 'outputBrainExtractionMask.nii.gz'
