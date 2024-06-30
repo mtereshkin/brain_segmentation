@@ -17,7 +17,7 @@ SECRET_KEY = os.environ.get("MINIO_ROOT_PASSWORD")
 BUCKET_NAME = os.environ.get("MINIO_BUCKET")
 MINIO_API_HOST = os.environ.get("MINIO_ENDPOINT")
 
-client = Minio(MINIO_API_HOST, ACCESS_KEY, SECRET_KEY, secure=False)
+minio_client = Minio(MINIO_API_HOST, ACCESS_KEY, SECRET_KEY, secure=False)
 
 @app.route('/upload-data', methods=['POST'])
 def upload_data():
@@ -26,7 +26,7 @@ def upload_data():
     file_path = os.path.join('/tmp', file.filename)
     file.save(file_path)
     
-    minio_client.fput_object(bucket_name, file.filename, file_path)
+    minio_client.fput_object(BUCKET_NAME, file.filename, file_path)
     os.remove(file_path)
 
     return jsonify({'message': 'File uploaded successfully'}), 200
@@ -43,7 +43,7 @@ def fetch_data():
     zip_path = os.path.join(temp_dir, object_name)
         
  
-    minio_client.fget_object(bucket_name, object_name, zip_path)
+    minio_client.fget_object(BUCKET_NAME, object_name, zip_path)
         
 
     extract_path = os.path.join(temp_dir, 'extracted')
@@ -71,7 +71,7 @@ def upload_results():
         
     output_zip_name = f'processed_output.zip'
     with open(output_zip_path, 'rb') as f:
-        minio_client.put_object(bucket_name, output_zip_name, f, os.path.getsize(output_zip_path))
+        minio_client.put_object(BUCKET_NAME, output_zip_name, f, os.path.getsize(output_zip_path))
         
     return jsonify({'message': 'Results uploaded successfully'}), 200
 
@@ -80,7 +80,7 @@ def main(data_dir):
     dicom_names = reader.GetGDCMSeriesFileNames(os.path.join(data_dir, "77654033_19950903/77654033/19950903/CT2"))
     reader.SetFileNames(dicom_names)
     image = reader.Execute()
-    sitk.WriteImage(image, os.path.join(curr_dir, "CT2.nii.gz"))
+    sitk.WriteImage(image, os.path.join(data_dir, "CT2.nii.gz"))
 
     command = "antsBrainExtraction.sh -d 3 -a CT2.nii.gz -e templates/T_template0.nii.gz  -m templates/T_template0_BrainCerebellumProbabilityMask.nii.gz -o output"
     subprocess.run(command, shell=True)
