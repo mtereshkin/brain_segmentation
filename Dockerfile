@@ -43,8 +43,6 @@ RUN pip install -r requirements.txt
 
 COPY . .
 
-RUN chmod +x extract.sh
-
 EXPOSE 4000
 
 CMD ["python", "src/main.py"]

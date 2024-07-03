@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: minio
+  labels:
+    app: minio
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: minio
+  template:
+    metadata:
+      labels:
+        app: minio
+    spec:
+      containers:
+      - name: minio
+        image: docker.io/bitnami/minio:2023
+        ports:
+        - containerPort: 9000
+        - containerPort: 9090
+        imagePullPolicy: Always
+        env:
+        - name: MINIO_BUCKET
+          value: flask-minio
+        - name: MINIO_ROOT_USER
+          value: "minioadmin"
+        - name: MINIO_ROOT_PASSWORD
+          value: "minioadmin"
+        - name: MINIO_VOLUMES
+          value: "/mnt/data"
+        - name: MINIO_HOST
+          value: minio
+        volumeMounts:
+        - name: minio-data
+          mountPath: "/mnt/data"
+      volumes:
+      - name: minio-data
+        persistentVolumeClaim:
+          claimName: minio-pvc

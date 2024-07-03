@@ -16,11 +16,6 @@ app = Flask(__name__)
 ACCESS_KEY = os.environ.get("MINIO_ROOT_USER")
 SECRET_KEY = os.environ.get("MINIO_ROOT_PASSWORD")
 BUCKET_NAME = os.environ.get("MINIO_BUCKET")
-MINIO_API_HOST = os.environ.get("MINIO_ENDPOINT")
-
-#minio_client = Minio(MINIO_API_HOST, ACCESS_KEY, SECRET_KEY, secure=False)
-#if not minio_client.bucket_exists(BUCKET_NAME):
-#   minio_client.make_bucket(BUCKET_NAME)
 
 s3 = boto3.client('s3',
                  endpoint_url="http://minio:9000",
@@ -32,11 +27,6 @@ def upload_data():
     if request.method == "POST":
     
         file_path = request.form.get("file_path")
-
-        #size = os.fstat(file.fileno()).st_size
-        
-        #minio_client.put_object(
-        #        BUCKET_NAME, file.filename, file, size)
 
         s3.upload_file(file_path, BUCKET_NAME, os.path.basename(file_path))
 
@@ -68,10 +58,6 @@ def fetch_data():
         return jsonify({'error': 'Missing object_name parameter'}), 400
 
     file_path = os.path.join('/test-assignment', object_name) 
-
-    #response = minio_client.get_object(BUCKET_NAME, object_name)
-    #with open(file_path, "wb") as f:
-    #    f.write(response.read())
 
     s3.download_file(BUCKET_NAME, object_name, file_path)
     try:
